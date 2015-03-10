@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body bgcolor="#FFFFE1">
+<H1>The Behavior Language</H1>
+A behavior is written as an expression that returns true or false<br>
+At every simulation instant, the oracle analyzes if the behaviors are true or not<br>
+A behavior is written in the following pattern:
+
+<UL>
+	<LI>{some description in natural language} behavior_name(seq1,seq2,...;parameter1,parameter2,...) = &ltexpression&gt</LI>
+	<UL>
+		<LI><b>seq:</b> is a generic name for a sequence of values of a signal from the start to the end of a simulation</LI>
+		<LI><b>parameter:</b> the user can give a name that best describes a parameter</LI>
+		<LI><b>&ltexpression&gt:</b> an expression that returns true or false.
+	</UL>
+</UL>
+
+<H2>The Behavior Expression</H2>
+
+The expression of a behavior can contain mathematical operators, relational operators, logical operators and navigators<br>
+The allowed mathematical operators are:
+<UL>
+	<LI>+</LI>
+	<LI>-</LI>
+	<LI>*</LI>
+	<LI>/</LI>
+	<LI>=</LI>
+</UL> 
+
+The allowed relational operators are:
+<UL>
+	<LI>&gt</LI>
+	<LI>&gt=</LI>
+	<LI>&lt</LI>
+	<LI>&lt=</LI>
+	<LI>==</LI>
+</UL>
+
+The allowed logical operators are:
+<UL>
+	<LI>AND</LI>
+	<LI>OR</LI>
+	<LI>NOT</LI>
+	<LI>-&gt</LI>
+</UL>
+
+The navigators are:
+<UL>
+	<LI><b>Current(seq):</b> returns the value of a sequence at the current analysis instant</LI>
+	<LI><b>Next(seq):</b> returns the value of a sequence at the next analysis instant (w.r.t the current instant)</LI>
+	<LI><b>Next(seq,i):</b> returns the value of a sequence at the analysis instant <i>i</i> in the future (w.r.t the current instant)</LI>
+	<LI><b>Previous(seq):</b> returns the value of a sequence at the previous analysis instant (w.r.t the current instant)</LI>
+	<LI><b>Previous(seq,i):</b> returns the value of a sequence at the analysis instant <i>i</i> in the past (w.r.t the current instant)</LI>
+	<LI><b>AtStart(seq):</b> returns true if the analysis instant is the first instant</LI>
+	<LI><b>AtEnd(seq):</b> returns true if the analysis instant is the last instant</LI>
+	<LI><b>Instant(seq):</b> returns the current instant</LI>
+	<LI><b>Clock(seq):</b> returns the analysis time at the current instant. Each instant may be attached to a simulation time. For example: instant 1 may represent 0.2s of simulation time</LI>
+	<LI><b>Instants(seq):</b> returns the number of simulation instants</LI>
+</UL>
+
+<H2>Behavior Examples</H2>
+To a better visualization, the descriptions are in green, the behavior signature (name, sequences and parameters) is in blue and the expression is in red.  
+<UL>
+	<LI><FONT color=#00AA00>{The behavior is true when the current value from the sequence is greater than the parameter <i>value</i>}</FONT> <FONT color=#0000AA>greaterthan(seq;value)</FONT> = <FONT color=#AA0000>[Current(seq)&gtvalue]</FONT></LI>
+	<LI><FONT color=#00AA00>{The behavior is true when the sequence mantains ascendant}</FONT> <FONT color=#0000AA>ascendant(seq)</FONT> = <FONT color=#AA0000>[NOT AtEnd(seq) AND Current(seq)&ltNext(seq)]</FONT></LI>
+	<LI><FONT color=#00AA00>{The behavior is a function: true if seq1 is a multiple of seq2 defined by the parameter <i>valor</i>}</FONT> <FONT color=#0000AA>function(seq1,seq2;valor)</FONT> = <FONT color=#AA0000>[Current(seq1)==Current(seq2) * valor]</FONT></LI>
+</UL>
+
+<UL>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+
+</body>
+</html>

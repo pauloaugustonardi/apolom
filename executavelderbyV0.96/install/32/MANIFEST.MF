@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ jaybird-full-2.1.6.jar derbytools.jar org.eclipse.
+ ui_3.7.0.I20110602-0100.jar org.eclipse.core.runtime_3.7.0.v20110110.
+ jar org.eclipse.swt.win32.win32.x86_3.7.1.v3738a.jar org.eclipse.core
+ .resources_3.7.100.v20110510-0712.jar swt.jar org.eclipse.equinox.com
+ mon_3.6.0.v20110523.jar derby.jar derbyclient.jar org.eclipse.core.jo
+ bs_3.5.100.v20110404.jar org.eclipse.osgi_3.7.1.R37x_v20110808-1106.j
+ ar org.eclipse.jface_3.7.0.I20110522-1430.jar org.eclipse.equinox.pre
+ ferences_3.4.1.R37x_v20110725.jar org.eclipse.core.contenttype_3.4.10
+ 0.v20110423-0524.jar org.eclipse.draw2d_3.7.1.v20110830-1143.jar org.
+ eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar org.eclipse.
+ equinox.weaving.hook_1.0.100.HEAD.jar org.eclipse.ui.workbench_3.7.0.
+ I20110519-0100.jar org.eclipse.swt_3.7.1.v3738a.jar derbynet.jar org.
+ codehaus.groovy.frameworkadapter_2.5.2.xx-20110929-1800-e37.jar org.e
+ clipse.core.commands_3.6.0.I20110111-0800.jar runtime_registry_compat
+ ibility.jar org.eclipse.equinox.app_1.3.100.v20110321.jar jmatio-0.1-
+ alpha.jar
+Class-Path: .
+Rsrc-Main-Class: apolom.main.Control.Start
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+

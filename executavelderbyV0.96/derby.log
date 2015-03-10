@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Tue Mar 10 14:27:37 BRT 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-014c-04ba-41aa-00000bc09c80 
+on database directory C:\Users\PauloAugusto\Documents\GitHub\apolom\executavelderbyV0.96\myDB  with class loader java.net.URLClassLoader@5e87512 
+Loaded from jar:rsrc:derby.jar!/
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0-b147
+user.dir=C:\Users\PauloAugusto\Documents\GitHub\apolom\executavelderbyV0.96
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

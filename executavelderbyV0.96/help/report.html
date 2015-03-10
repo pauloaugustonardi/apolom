@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body bgcolor="#FFFFE1">
+<H1>The Report</H1>
+The report is composed by a main table and a sequence table<br>
+The report presents all the instants where a failure occur and/or if a spurious value is detected<br>
+The main table have 6 columns:
+	<UL>
+		<LI>The OIU name, i.e., the description of a oiu that has at least one disrespected rule</LI>
+		<LI>The instant when the OIU was disrespected</LI>
+		<LI>If there is a failure w.r.t. the main rule</LI>
+		<LI>If there is a failure w.r.t. at least one constraint rule</LI>
+		<LI>If there is a failure w.r.t. at least one saveguard rule</LI>
+		<LI>If there is a spurious value detected</LI>
+	</UL>
+Clicking on one of the main table lines, the sequence table will show:
+	<UL>
+		<LI>The next 100 values from all the signals involved on the failure</LI>
+	</UL>
+
+Each oracle execution generates a log of the test case. The user can navigate through the results by clicking on the <i>previous</i> and <i>next</i> buttons, or by typing the test case number on the text box and clicking on the <i>jump</i> button<br>
+
+<UL>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+	
+</body>
+</html>

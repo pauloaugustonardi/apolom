@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body bgcolor="#FFFFE1">
+<H1>Oracle Information Unit (OIU)</H1>
+
+An OIU is a "self-contained" group of requirements.<BR>
+An OIU is composed by a main rule and, possibly, a set of constraint rules and a set of safeguard rules. When analyzing the results, the oracle will produce the report based on different levels of veredict:
+<UL>
+	<LI><FONT color=#00AA00><B>Success</B></FONT>: if the main rule is true and the constraint rules, if any, are true</LI>
+	<LI><FONT color=#888800><B>Constraint Failure</B></FONT>: if the main rule is true and a constraint rule is false</LI>
+	<LI><FONT color=#888800><B>Constraint Critical Failure</B></FONT>: if the main rule is true, a constraint rule is false and a safeguard rule is false</LI>
+	<LI><FONT color=#AA0000><B>Failure</B></FONT>: if the main rule is false and the safeguard rules are true</LI>
+	<LI><FONT color=#AA0000><B>Critical failure</B></FONT>: if the main rule and a safeguard rule are false</LI>
+</UL>
+
+An example of OIU may represent the following requirements:
+
+<OL>
+	<LI>"If the input temperature is greater than 10°C, the controlled temperature must maintain at 10°C (main rule)"
+	<LI>"The input temperature must be at maximum of 20°C (constraint rule)"
+	<LI>"In case of controller failure, the controlled temperature must never be greater than 11°C (safeguard rule)"
+</OL>
+
+<H2><A name="creatingoiu">Creating an OIU</A></H2>
+To create an OIU:
+<OL>
+	<LI>Go to the <i>Module Editor</i> tab (<A href="./example.html#module1">Figure 4</A>)</LI>
+	<LI>Select a pre-existing module by clicking on it at the <i>Modules of Module...</i> area or navigating the <i>module tree</i> at the left side of the screen. If no module was created, just a root module will exist</LI> 
+	<LI>Right-click at the <i>Oracle Information Units of module...</i> area to create an OIU</LI>
+</OL>
+
+<UL>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+
+<H2><A name="definingoiu">Defining an OIU</A></H2> 
+ To define an OIU:
+ 
+<OL>
+	<LI>Go to the <i>Module Editor</i> tab (<A href="./example.html#module1">Figure 4</A>)</LI>
+	<LI>Find the pre-created OIU on its respective module or create a new OIU as explained at the previous section</LI>
+	<LI>Define the main rule:</LI>
+	<OL>
+		<LI>Press the <I>Edit Main Rule</I> button</LI>, at the upper-right in the <i>OIU Editor</i> screen
+		<LI>Using the <i>Rule Wizard</i>: the wizard enables the user to construct rules as the following pattern: if "what is in the left side is true" it implies that "what is in the right side must be true"</LI>
+		<OL>
+			<LI>Defining the left side triad (property, behavior, temporal characteristic) of the rule:
+			<OL>
+				<LI>Select a property at its respective box. All the defined properties will be listed when clicking at it</LI>
+				<LI>Select a behavior to the respective property, for example: "equals to" or "greater than"</LI>
+				<OL>
+					<LI>If there is no suitable behavior, you can create a new behavior. See <A href="behavior.html">how to create a new behavior</A></LI>
+				</OL>
+				<LI>Select a temporal characteristic, if needed OR the option &ltNONE&gt</LI>
+				<LI>If the left side depends on more than one triad, you can add a new one by clicking on the + button</LI>
+			</OL>
+			<LI>Define the right side of the rule in the same way as it was done in the right side</LI>
+			<LI>Press the <i>Generate Expression</i> button and the expression will be presented at the <i>edition area</i> in the middle of the screen</LI>
+			<LI>Press the <i>Save</i> button, at the middle-right of the screen</LI>
+		</OL>
+		<LI>Defining the main rule manually. The user can define the main rule manually:</LI>
+		<OL>
+			<LI>Press<i>Edit Main Rule</i></LI>
+			<LI>Write the expression at the <i>edition area</i> in the middle of the screen</LI> 
+			<LI><A href="languagelist.html">More about the base specification language</A></LI>
+			<LI>Press the <i>Save</i> button, at the middle-right of the screen</LI>
+		</OL>
+	</OL>
+	<LI>Define the constraint rules:</LI>
+	<OL>
+		<LI>Press the <i>Add Constraint</i> button</LI>
+		<LI>Write the constraint rule at the language editor box. <A href="languagelist.html">More about the base specification language</A></LI>
+		<LI>Write the respective meaning in natural language at the green box</LI>
+		<LI>Press the <i>Save</i> button</LI>
+	</OL>
+	<LI>Define the saveguard rules:</LI>
+	<OL>
+		<LI>Press the <i>Add Safeguard</i> button</LI>
+		<LI>Write the safeguard rule at the language editor box. <A href="languagelist.html">More about the base specification language</A></LI>
+		<LI>Write the respective meaning in natural language at the green box</LI>
+		<LI>Press the <i>Save</i> button</LI>
+	</OL>
+</OL> 
+
+<UL>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+</body>
+</html>

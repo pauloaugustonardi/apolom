@@ -1,0 +1,652 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body bgcolor="#FFFFE1">
+<H1><A name="trio">TRIO</A></H1>
+
+TRIO is a temporal language of first-logic that allows the definition of specifications.<br>
+Apolom supports an adaptation of that language as a base language to the OIUs representation<br>
+An OIU represents a main rule, and possibly a set of constraint rules and a set of safeguard rules<br>
+Each rule must return a true or false value and a rule is analyzed at each instant from the start to the end simulation instants<br>
+A rule is represented by a TRIO expression<br>
+
+<H2>Index</H2>
+<UL>
+	<LI><A href="#basic">Basic Concepts</A></LI>
+	<LI><A href="#analyzer">How the Analyzer Works</A></LI>
+	<LI><A href="#trioexpression">A TRIO-adapted Expression</A></LI>
+	<UL>
+		<LI><A href="#mathematical">Mathematical operators</A></LI>
+		<LI><A href="#relational">Relational operators</A></LI>
+		<LI><A href="#logical">Logical operators</A></LI>
+		<LI><A href="#triooperators">TRIO operators</A></LI>
+		<UL>
+			<LI><A href="#dist">Dist</A></LI>
+			<LI><A href="#past">Past</A></LI>
+			<LI><A href="#futr">Futr</A></LI>
+			<LI><A href="#lasts">Lasts</A></LI>
+			<LI><A href="#lasted">Lasted</A></LI>
+			<LI><A href="#lasting">Lasting</A></LI>
+			<LI><A href="#untils">UntilS</A></LI>
+			<LI><A href="#untilw">UntilW</A></LI>
+			<LI><A href="#ends">Ends</A></LI>
+			<LI><A href="#starts">Starts</A></LI>
+			<LI><A href="#exists">Exists</A></LI>
+			<LI><A href="#forall">ForAll</A></LI>
+			<LI><A href="#nowon">NowOn</A></LI>
+			<LI><A href="#nowontimes">NowOnTimes</A></LI>
+			<LI><A href="#existsq">ExistsQ</A></LI>
+		</UL>
+		<LI><A href="#examples">Examples</A></LI>
+		<UL>
+			<LI><A href="#example1">Example 1: a simple relation between signals and their respective behaviors</A></LI>
+			<LI><A href="#example2">Example 2: a simple relation between two signals using a function</A></LI>
+			<LI><A href="#example3">Example 3: a simple relation between more then two signals and their respective behaviors</A></LI>
+			<LI><A href="#example4">Example 4: working with intervals of time and fixed delays</A></LI>
+			<LI><A href="#example5">Example 5: working with intervals of time and variable delays</A></LI>	
+			
+		</UL>
+		<LI><A href="#spurious">Detecting spuriousness</A></LI>
+		<LI><A href="#example5">The analysis hypothesis</A></LI>
+	</UL>
+</UL>
+
+<H2><A name="basic">Basic Concepts</A></H2>
+<UL>
+	<LI>A sequence represents the values of a signal in a finite simulation time. The first position represents the value of a signal at the first simulation instant and so on.</LI>
+	<LI>The analyzer travels from the first instant to the last instant</LI>
+	<LI>At each instant, the analyzer executes the rules (expressions)</LI>
+	<LI>And at each instant <i>i</i>, the analyzer considers as "current" the i<i>th</i> value of each signal sequence</LI>
+	<br>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI> 
+</UL>
+
+<H3><A name="analyzer">How the Analyzer Works</H3>
+Let's say that a Simulink-like model has a signal that represents a temperature and a signal that represents a pressure<br>
+Let's suppose a rule which imposes the <i>temperature</i> must be less than 5.5<br>
+Let's say that a simulation has 10 instants and the values of the signal <i>temperature</i> and <i>pressure</i> are:
+<table border=1>
+<tr> 
+	<td><a name="table">Instant:</a></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td>
+</tr>
+<tr>
+	<td>temperature:</td><td>5.0</td><td>5.2</td><td>5.3</td><td>5.4</td><td>5.5</td><td>5.3</td><td>5.3</td><td>5.2</td><td>5.1</td><td>5.0</td>
+</tr>
+<tr>
+	<td>pressure:</td><td>33.67008</td><td>33.87008</td><td>33.97008</td><td>34.07008</td><td>34.17008</td><td>33.97008</td><td>33.97008</td><td>33.87008</td><td>33.77008</td><td>33.67008</td>
+</tr>
+</table> 
+
+The analyzer will travel through all the instants and it will verify the rule: "if the temperature is less than 5.5" for each instant<br>
+The analyzer, than, will identify that, at instant 4, the temperature is not less than 5.5 and a report will be generated<br>
+
+<UL>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+
+<H2><A name="trioexpression">A TRIO-adapted Expression</A></H2>
+A TRIO-adapted expression may contain mathematical operators, relational operators, logical operators and TRIO operators<br>
+
+<A name="mathematical">The allowed mathematical operators are</A>:
+<UL>
+	<LI>+</LI>
+	<LI>-</LI>
+	<LI>*</LI>
+	<LI>/</LI>
+	<LI>=</LI>
+</UL> 
+
+<A name="relational">The allowed relational operators are</A>:
+<UL>
+	<LI>&gt</LI>
+	<LI>&gt=</LI>
+	<LI>&lt</LI>
+	<LI>&lt=</LI>
+	<LI>==</LI>
+</UL>
+
+<A name="logical">The allowed logical operators are</A>:
+<UL>
+	<LI>AND</LI>
+	<LI>OR</LI>
+	<LI>NOT</LI>
+	<LI>-&gt</LI>
+</UL> 
+
+<UL>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</UL>
+<A name="triooperators">The TRIO and TRIO-adapted operators are</A>:
+<UL>
+	<LI><B><A name="dist">Dist(&ltb&gt,i)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> holds at instant <i>i</i> (w.r.t. the present analysis instant). <i>i</i> can be negative</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 0:</LI>
+			<LI><B>Dist(LessThan(temperature,5.5),3)</B>=true</LI>
+			<LI>Because at instant 3(0+3), the temperature is less than 5.5</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 1:</LI>
+			<LI><B>Dist(LessThan(temperature,5.5),3)</B>=false</LI>
+			<LI>Because at instant 4(1+3), the temperature is not less than 5.5</LI>
+			<LI>Then, the oracle will report that, at instant 1, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="past">Past(&ltb&gt,i)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> holds at instant <i>i</i> in the past (w.r.t. the present analysis instant). <i>i</i> can not be negative</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 4:</LI>
+			<LI><B>Past(LessThan(temperature,5.5),1)</B>=true</LI>
+			<LI>Because at instant 3(4-1), the temperature is less than 5.5</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 5:</LI>
+			<LI><B>Past(LessThan(temperature,5.5),3)</B>=false</LI>
+			<LI>Because at instant 4(5-1), the temperature is not less than 5.5</LI>
+			<LI>Then, the oracle will report that, at instant 5, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="futr">Futr(&ltb&gt,i)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> holds at instant <i>i</i> in the future (w.r.t. the present analysis instant). <i>i</i> can not be negative</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 2:</LI>
+			<LI><B>Futr(LessThan(temperature,5.5),1)</B>=true</LI>
+			<LI>Because at instant 3(2+1), the temperature is less than 5.5</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 3:</LI>
+			<LI><B>Futr(LessThan(temperature,5.5),1)</B>=false</LI>
+			<LI>Because at instant 4(3+1), the temperature is not less than 5.5</LI>
+			<LI>Then, the oracle will report that, at instant 1, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="lasts">Lasts(&ltb&gt,i)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> holds from the current instant to instant<i>i</i> in the future (w.r.t. the present analysis instant). <i>i</i> can not be negative</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 0:</LI>
+			<LI><B>Lasts(LessThan(temperature,5.5),3)</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 from instant 0 to instant 3</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 1:</LI>
+			<LI><B>Lasts(LessThan(temperature,5.5),3)</B>=false</LI>
+			<LI>Because the temperature is not less than 5.5 at least once from instant 1 to instant 4</LI>
+			<LI>Then, the oracle will report that, at instant 1, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="lasted">Lasted(&ltb&gt,i)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> held from the current instant to instant<i>i</i> in the past (w.r.t. the present analysis instant). <i>i</i> can not be negative</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 3:</LI>
+			<LI><B>Lasted(LessThan(temperature,5.5),3)</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 from instant 3 to instant 0</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 4:</LI>
+			<LI><B>Lasted(LessThan(temperature,5.5),3)</B>=false</LI>
+			<LI>Because the temperature is not less than 5.5 at least once from instant 4 to instant 1</LI>
+			<LI>Then, the oracle will report that, at instant 4, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="lasting">Lasting(&ltb&gt,i,j)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh&gt</i> holds from instant <i>i</i> to instant<i>j</i> (w.r.t. the present analysis instant). <i>i</i> and <i>j</i> can be negative but <i>i</i> must be less than <i>j</i></LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 1:</LI>
+			<LI><B>Lasting(LessThan(temperature,5.5),-1,2)</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 from instant 0(1-1) to instant 3(1+2)</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 2:</LI>
+			<LI><B>Lasting(LessThan(temperature,5.5),-1,2)</B>=false</LI>
+			<LI>Because the temperature not is less than 5.5 at least once from instant 1(2-1) to instant 4(2+2)</LI>
+			<LI>Then, the oracle will report that, at instant 2, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="untils">UntilS(&ltb1&gt,i,&ltb2&gt)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh1&gt</i> holds from the current instant until another behavior <i>&ltbeh2&gt</i> is true (w.r.t. the present analysis instant). False if the second behavior never holds</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 0:</LI>
+			<LI><B>UntilS(LessThan(temperature,5.5),0,GreaterThan(pressure,34.07))</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 from instant 0 until instant 3, where the pressure is greater than 34.07</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 5:</LI>
+			<LI><B>UntilS(LessThan(temperature,5.5),0,GreaterThan(pressure,35.0))</B>=false</LI>
+			<LI>Because, besides the temperature is less than 5.5 at all instants from instant 5 to the last instant, the second behavior never holds in the future</LI>
+			<LI>Then, the oracle will report that, at instant 5, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>	
+	<LI><B><A name="untilw">UntilW(&ltb1&gt,i,&ltb2&gt)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh1&gt</i> holds from the current instant until another behavior <i>&ltbeh2&gt</i> is true (w.r.t. the present analysis instant). True if the second behavior never holds</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 0:</LI>
+			<LI><B>UntilS(LessThan(temperature,5.5),0,GreaterThan(pressure,34.07))</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 from instant 0 until instant 3, where the pressure is greater than 1</LI>
+		</UL>
+		<UL>
+			<LI>AND at instant 5:</LI>
+			<LI><B>UntilS(LessThan(temperature,5.5),0,GreaterThan(pressure,35.0))</B>=true</LI>
+			<LI>Because, besides the pressure is never greater than 35.0, the temperature is less than 5.5 at all instants from instant 5 to the last instant</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="ends">Ends(&ltb1&gt)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh1&gt</i> holds at the current instant but does not hold at the next instant</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 3:</LI>
+			<LI><B>Ends(LessThan(temperature,5.5))</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 at instant 3 but does not hold at the next instant</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 5:</LI>
+			<LI><B>Ends(LessThan(temperature,5.5))</B>=false</LI>
+			<LI>Because the temperature is less than 5.5 at instant 5, but it is also less than 5.5 at instant 6</LI>
+			<LI>Then, the oracle will report that, at instant 5, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="starts">Starts(&ltb1&gt)</A>:</B> is a TRIO operator</B>. Returns true if a behavior <i>&ltbeh1&gt</i> holds at the current instant but did not hold at the previous instant</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 5:</LI>
+			<LI><B>Starts(LessThan(temperature,5.5))</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 at instant 5 but did not hold at the previous instant</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 6:</LI>
+			<LI><B>Ends(LessThan(temperature,5.5))</B>=false</LI>
+			<LI>Because the temperature is less than 5.5 at instant 6, but it was also less than 5.5 at instant 5</LI>
+			<LI>Then, the oracle will report that, at instant 6, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="exists">Exists(&ltb1&gt|&ltexpression&gt,i,j)</A>:</B> is a TRIO temporal quantifier</B>. Returns true if a behavior <i>&ltbeh1&gt</i> or an expression <i>&ltexpression&gt</i> holds at least once from instant <i>i</i> to instant <i>j</i>. <i>i</i> and <i>j</i> can be negative but <i>i</i> must be less than <i>j</i></LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 3:</LI>
+			<LI><B>Exists(LessThan(temperature,5.5),0,2)</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 at least once from instant instant 3 to instant 5</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="forall">ForAll(&ltb1&gt|&ltexpression&gt,i,j)</A>:</B> is a TRIO temporal quantifier</B>. Returns true if a behavior <i>&ltbeh1&gt</i> or an expression <i>&ltexpression&gt</i> holds all instants from instant <i>i</i> to instant <i>j</i>. <i>i</i> and <i>j</i> can be negative but <i>i</i> must be less than <i>j</i></LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 0:</LI>
+			<LI><B>ForAll(LessThan(temperature,5.5),0,2)</B>=true</LI>
+			<LI>Because the temperature is less than 5.5 always from instant instant 0 to instant 2</LI>
+		</UL>
+		<UL>
+			<LI>But at instant 3:</LI>
+			<LI><B>ForAll(LessThan(temperature,5.5),0,2)</B>=false</LI>
+			<LI>Because the temperature is not less than 5.5 always from instant instant 3 to instant 5</LI>
+			<LI>Then, the oracle will report that, at instant 3, a rule was not respected</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="nowon">NowOn(&ltb1&gt)</A>:</B> is a function weakly based on a TRIO operator</B>. Returns the number of consecutive instants that a behavior <i>&ltbeh1&gt</i> holds starting from the current instant.</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 1:</LI>
+			<LI><B>NowOn(LessThan(temperature,5.5))</B>=3</LI>
+			<LI>Because the temperature is less than 5.5 for 3 consecutive instants, from instant instant 1 to instant 3</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="nowontimes">NowOnTimes(&ltb1&gt,t)</A>:</B> is a function weakly based on a TRIO operator</B>. Returns the instant that a behavior <i>&ltbeh1&gt</i> holds for the t<i>th</i> time. Returns -1 if it does not hold</LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 3:</LI>
+			<LI><B>NowOnTimes(LessThan(temperature,5.5),2)</B>=5</LI>
+			<LI>Because, starting at instant 3, the temperature is less than 5.5 for the second time at instant 5</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+	<br>
+	<LI><B><A name="existsq">ExistsQ(&ltb1&gt,i,j)</A>:</B> is a function weakly based on a TRIO operator</B>. Returns number of times that a behavior <i>&ltbeh1&gt</i> holds from instant <i>i</i> to instant <i>j</i>. <i>i</i> and <i>j</i> can be negative but <i>i</i> must be less than <i>j</i></LI>
+	<UL>
+		<LI>Example (consider this <a href="#table">table</a>):
+		<UL>
+			<LI>At instant 3:</LI>
+			<LI><B>ExistsQ(LessThan(temperature,5.5),0,2)</B>=2</LI>
+			<LI>Because the temperature is less than 5.5 for 3 times from instant 3 to instant 5</LI>
+		</UL>
+		<LI><A href="#trio">return to the top</A></LI>
+		<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+		<LI><A href="./main.html">Return to the main page</A></LI>
+	</UL>
+</UL>
+
+<H3><A name="examples">Examples</A></H3>
+<table border=1>
+<TR>
+<TH><A name="example1"><H4>Example 1: a simple relation between signals and their respective behaviors</H4></A>
+</TH>
+</TR>
+<TR>
+<TD><B>Introduction:</B>
+<UL>
+	<LI>An expression may contain a relation between signals and their behaviors</LI>
+	<LI><A href="./oracleanalysis.html">More about how the oracle analyzes the expressions</A></LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD><B>Requirement:</B> If temperature is greater than 5.4, pressure must be greater than 34.1
+</TD>
+</TR>
+<TR>
+<TD><B>Explanation:</B> 
+<UL>
+	<LI>"greater than" is a behavior (<A href="./behavior.html">more about behaviors</A>)</LI>
+	<LI>temperature is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>5.4 is a parameter</LI>
+</UL>
+</TR>
+</TD>
+<TR>
+<TD><B>Expression:</B> Dist(greaterthan(temperature;5.4),0) -> Dist(greaterthan(pressure;34.1),0)
+</TD>
+</TR>
+</table>
+
+<ul>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</ul>
+
+<table border=1>
+<TR>
+<TH>
+<A name="example2"><H4>Example 2: a simple relation between two signals using a function</H4></A>
+</TH>
+</TR>
+<TR>
+<TD>
+<B>Introduction:</B>
+<UL>
+	<LI>An expression may contain a relation between signals that is better expressed as a function</LI>
+	<LI><A href="oracleanalysis.html">More about how the oracle analyzes the expressions</A></LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD><B>Requirement:</B> The pressure and temperature relation must be P = 0.0884 * (T + 461.2) - 12.1
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Explanation:</B> 
+<UL>
+	<LI>P = 0.0884 * (T + 461.2) - 12.1 is a function
+	<LI>A function can be created as a behavior (<A href="./behavior.html#creating">more about behaviors</A>)</LI>
+	<UL>
+		<LI>pressuretemperature(seq1,seq2) = Current(seq1) == 0.0884 * (Current(seq2) + 461.2) - 12.1</LI>
+	</UL>
+	<LI>Then, no matter the pressure value, it must follow the function description</LI> 
+</UL>
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Expression:</B> 
+<UL>
+	<LI>Dist(pressuretemperature(pressure,temperature),0)<br><i>or</i></LI>
+	<LI>Dist(doesntmatter(pressure),0) -> Dist(pressuretemperature(pressure,temperature),0)</LI>
+</UL> 
+</TD>
+</TR>
+</table>
+
+<ul>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</ul>
+
+<table border=1>
+<TR>
+<TH>
+<A name="example3"><H4>Example 3: a simple relation between more then two signals and their respective behaviors</H4></A>
+</TH>
+</TR>
+<TR>
+<TD>
+<B>Introduction:</B>
+<UL>
+	<LI>An expression may contain relations between more than two signals</LI>
+	<LI><A href="oracleanalysis.html">More about how the oracle analyzes the expressions</A></LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD><B>Requirement:</B> If temperature is greater than 5.4, pressure must be greater than 34.1 and volume must be less than 10.0
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Explanation:</B> 
+<UL>
+	<LI>"greater than" is a behavior (<A href="./behavior.html">more about behaviors</A>)</LI>
+	<LI>temperature is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>5.4 is a parameter</LI>
+	<LI>"less than" is a behavior (<A href="./behavior.html">more about behaviors</A>)</LI>
+	<LI>volume is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>10.0 is a parameter</LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Expression:</B> Dist(greaterthan(temperature;5.4),0) -> Dist(greaterthan(pressure;34.1),0) AND Dist(lessthan(volume;10.0),0) 	 
+</TD>
+</TR>
+</table>
+
+<ul>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</ul>
+
+<table border=1>
+<TR>
+<TH>
+<A name="example4"><H4>Example 4: working with intervals of time and fixed delays</H4></A>
+</TH>
+</TR>
+<TR>
+<TD>
+<B>Introduction:</B>
+<UL>
+	<LI>A requirement may express relations between delayed behavior responses. For example, if something happens in an interval of time, another behavior must happen with a delay of X instants</LI>
+	<LI><A href="oracleanalysis.html">More about how the oracle analyzes the expressions</A></LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD><B>Requirement:</B> If the temperature is greater than 5.2, the pressure must be greater than 33.9 for the same interval of time, within an exact delay of 3 instants
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Explanation:</B> 
+<UL>
+	<LI>"greater than" is a behavior (<A href="./behavior.html">more about behaviors</A>)</LI>
+	<LI>temperature is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>5.2 is a parameter</LI>
+	<LI>The first identified behavior is: greaterthan(temperature;5.2)</LI>
+	<LI>pressure is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>33.9 is a parameter</LI>
+	<LI>The second identified behavior is: greaterthan(pressure;33.9)</LI>
+	<LI>The second behavior must hold for the same number of instants of the first one:</LI>
+	<UL>
+		<LI>To know the interval of instants that greaterthan(temperature;5.2) holds:</LI>
+		<UL>
+			<LI>One can retrieve the number of instants when a behavior starts to hold and, then, counting how many instants it holds from now on:</LI> 
+			<LI>Starts(greaterthan(temperature;5.2)) AND howlong = NowOn(greaterthan(temperature;5.2))>0</LI>
+			<LI>The interval of instants will be stored in the variable <i>howlong</i></LI>
+		</UL>
+		<LI>To guarantee that greaterthan(pressure;33.9) holds for the same period of time:</LI>
+		<UL>
+			<LI>One can use the defined variable</LI>
+			<LI>And describe that exists, at instant 3 in the future, a series of ocorrences that lasts for the same number of times than the variable <i>howlong</i></LI>
+			<LI>Lasting(greaterthan(controlled_pressure;0),4, 3 + howlong)<br>or</LI>
+			<LI>Exists(Lasts(greaterthan(controlled_pressure;0),howlong - 1),4,4)</LI>
+		</UL> 
+	</UL> 
+</UL>
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Expression:</B> 
+	<UL>
+		<LI>Starts(greaterthan(temperature;5.2)) AND howlong = NowOn(greaterthan(temperature;5.2))>0 -> Lasting(greaterthan(controlled_pressure;0),4, 3 + howlong) <br>or</LI>
+		<LI>Starts(greaterthan(temperature;5.2)) AND howlong = NowOn(greaterthan(temperature;5.2))>0 -> Exists(Lasts(greaterthan(controlled_pressure;0),howlong - 1),4,4)</LI>
+	</UL> 	 
+</TD>
+</TR>
+</table>
+
+<ul>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</ul>
+
+<table border=1>
+<TR>
+<TH>
+<A name="example5"><H4>Example 5: working with intervals of time and variable delays</H4></A>
+</TH>
+</TR>
+<TR>
+<TD>
+<B>Introduction:</B>
+<UL>
+	<LI>A requirement may express relations between delayed behavior responses. For example, if something happens in an interval of time, another behavior must happen with a maximum delay of X instants and minimum delay of Y</LI>
+	<LI><A href="oracleanalysis.html">More about how the oracle analyzes the expressions</A></LI>
+</UL>
+</TD>
+</TR>
+<TR>
+<TD><B>Requirement:</B> If the temperature is greater than 5.2, the pressure must be greater than 33.9 for the same interval of time, within a minimum delay of 1 instant and a maximum delay of 4 instants
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Explanation:</B> 
+<UL>
+	<LI>"greater than" is a behavior (<A href="./behavior.html">more about behaviors</A>)</LI>
+	<LI>temperature is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>5.2 is a parameter</LI>
+	<LI>The first identified behavior is: greaterthan(temperature;5.2)</LI>
+	<LI>pressure is a property, i.e, a signal in the model (<A href="./mapping.html">more about signals</A>)</LI>
+	<LI>33.9 is a parameter</LI>
+	<LI>The second identified behavior is: greaterthan(pressure;33.9)</LI>
+	<LI>The second behavior must hold for the same number of instants of the first one:</LI>
+	<UL>
+		<LI>To know the interval of instants that greaterthan(temperature;5.2) holds:</LI>
+		<UL>
+			<LI>One can retrieve the number of instants when a behavior starts to hold and, then, counting how many instants it holds from now on:</LI> 
+			<LI>Starts(greaterthan(temperature;5.2)) AND howlong = NowOn(greaterthan(temperature;5.2))>0</LI>
+			<LI>The interval of instants will be stored in the variable <i>howlong</i></LI>
+		</UL>
+		<LI>To guarantee that greaterthan(pressure;33.9) holds for the same period of time:</LI>
+		<UL>
+			<LI>One can use the defined variable</LI>
+			<LI>And describe that exists, between instants 1 and 4 in the future, a series of ocorrences that lasts for the same number of times than the variable <i>howlong</i></LI>
+			<LI>Exists(Lasts(greaterthan(controlled_pressure;0),howlong - 1),1,4)</LI>
+		</UL> 
+	</UL> 
+</UL>
+</TD>
+</TR>
+<TR>
+<TD>
+<B>Expression:</B> Starts(greaterthan(temperature;5.2)) AND howlong = NowOn(greaterthan(temperature;5.2))>0 -> Exists(Lasts(greaterthan(controlled_pressure;0),howlong - 1),1,4) 	 
+</TD>
+</TR>
+</table>
+
+<ul>
+	<LI><A href="#trio">return to the top</A></LI>
+	<LI><a href="javascript:window.history.go(-1)">Back to the previous page</a></LI>
+	<LI><A href="./main.html">Return to the main page</A></LI>
+</ul>
+  
+</body>
+</html>
